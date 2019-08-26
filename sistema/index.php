@@ -25,6 +25,7 @@
                 <form onclick='filtrar()' id='formLojaFiltrar' class="form-inline">
                   <div class="form-group mx-sm-3 mb-2">
                     <input type="hidden" name='action' value="filtrar">
+                    <input type='hidden' id='pagina_atual' name='pagina' value='1'/>
                     <select id="categoria" name='categoria_id' class="form-control form-control-user">
                     </select>
                   </div>

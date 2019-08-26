@@ -11,7 +11,7 @@
     public $categoria_id;
     public $categoria_nome;
     public $criado_em;
-
+   
     public function __construct($db = null){
         $this->con = $db;
     }
@@ -19,7 +19,7 @@
     public function listarProdutosLoja(){
 
         $query    = '	SELECT p.nome AS produto_nome, c.nome AS categoria_nome, c.id AS categoria_id, p.id AS produto_id,';
-        $query   .= '	 p.preco, cli.nome AS cliente_nome, cli.id AS cliente_id, p.criado_em';
+        $query   .= '	 p.preco, cli.nome AS cliente_nome, cli.id AS cliente_id, p.criado_em, "'.$this->paginacaoLoja().'" as num_pagina, "'.$this->pagina.'" as pagina_atual';
         $query   .= '	from produtos as p';
         $query   .= '	inner join clientes as cli on(p.cliente_id = cli.Id)';
         $query   .= '	left join categorias as c on(c.Id = p.categoria_id)';
@@ -64,9 +64,21 @@
 
         }
 
-        if(isset($this->pagina)){
+        if(isset($this->pagina) && $this->pagina > 1){
 
-            $query .= ' OFFSET '.$this->pagina * $this->paginacaoLoja();
+            $this->pagina = $this->pagina - 1;
+
+            $num_itens = $this->paginacaoLoja();
+
+            if($this->paginacaoLoja() < ($this->pagina * $this->item_pagina)){
+                
+                $query .= ' OFFSET '. $num_itens - $this->item_pagina;
+
+            }else if($num_itens > $this->item_pagina){
+
+                $query .= ' OFFSET '.$this->pagina * $this->item_pagina;
+
+            }  
 
         }
 
@@ -99,7 +111,8 @@
                     $loja->cliente_nome = $row->cliente_nome;
                     $loja->preco = $row->preco;
                     $loja->criado_em = $row->criado_em;
-
+                    $loja->num_pagina = $row->num_pagina;
+                    $loja->pagina_atual = $row->pagina_atual;
                     $lojas[] = $loja;
                 }
 
@@ -147,12 +160,20 @@
             $query .= implode(',', $sql);
         }
 
+        $stmt = $this->con->prepare($query);
+
+        if(isset($this->categoria_id) && $this->categoria_id > 0 ){
+
+            $stmt->bindParam(':categoria_id', $this->categoria_id);
+
+        }
+
        
         if($row = $stmt->execute()){
 
             $row = $stmt->fetch(PDO::FETCH_OBJ);
             
-            $num_paginas = $row->rows % $this->item_pagina;
+            $num_paginas = $row->rows;
             
         }
 

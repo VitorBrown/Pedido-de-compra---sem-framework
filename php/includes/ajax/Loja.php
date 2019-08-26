@@ -10,8 +10,10 @@
         switch($_POST['action']){
             case 'filtrar':
                 echo  json_encode($cLoja->filtrarProdutos($request));
-            break;
-                
+            break;  
+            case 'pagina':
+                echo  json_encode($cLoja->filtrarProdutos($request));
+            break;     
         }
     }   
 
