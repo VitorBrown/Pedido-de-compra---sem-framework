@@ -23,22 +23,23 @@
 
         $stmt->bindParam(":email", $this->email);
         $stmt->bindParam(":senha", $this->senha);
-
         if($row = $stmt->execute()){
 
             $row = $stmt->fetch(PDO::FETCH_OBJ);
-            $_SESSION['usuario']['login'] = true;
-            $_SESSION['usuario']['cliente_id']  = $row->cliente_id;
-            $_SESSION['usuario']['nome']  = $row->nome;
-            $_SESSION['usuario']['cpf']  = $row->cpf;
-            $_SESSION['usuario']['tipo']  = $row->tipo;
-            $_SESSION['usuario']['email'] = $row->email;
-        
-            return true;
-        }else{
+            if(isset($row->cliente_id)){
+                $_SESSION['usuario']['login'] = true;
+                $_SESSION['usuario']['cliente_id']  = $row->cliente_id;
+                $_SESSION['usuario']['nome']  = $row->nome;
+                $_SESSION['usuario']['cpf']  = $row->cpf;
+                $_SESSION['usuario']['tipo']  = $row->tipo;
+                $_SESSION['usuario']['email'] = $row->email;
+                return true;
+            }
+           
+        }
             $_SESSION['usuario']['login'] = false;
             return false;
-        }
+        
         }
 
         public function logado(){

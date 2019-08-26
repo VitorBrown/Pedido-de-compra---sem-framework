@@ -1,4 +1,5 @@
 <?php
+include_once 'sessaoModel.php';
     class Produto{
         
         private $con;

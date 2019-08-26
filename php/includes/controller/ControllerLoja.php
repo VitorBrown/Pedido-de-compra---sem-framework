@@ -1,7 +1,7 @@
 <?php
 
     include_once 'autoLoadClass.php';
-
+    include_once 'sessaoController.php';
     class ControllerLoja{
         
         public function filtrarProdutos($request){

@@ -1,5 +1,5 @@
 <?php
-    
+    include_once 'sessaoModel.php';
     class Categoria{
         
         private $con;
